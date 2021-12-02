@@ -13,6 +13,7 @@
 /*.jar
 /tmp
 *.ini
+.ds_store
 
 gradlew
 gradlew.bat
