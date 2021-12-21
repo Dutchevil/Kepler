@@ -1,70 +1,54 @@
-ALTER TABLE `rooms`
-	ADD COLUMN `is_hidden` TINYINT(1) NOT NULL DEFAULT 0 AFTER `rating`;
+ALTER TABLE `items`
+	ADD COLUMN `database_id` VARCHAR(50) NOT NULL DEFAULT LOWER(CONCAT(
+    LPAD(HEX(ROUND(rand()*POW(2,32))), 8, '0'), '-',
+    LPAD(HEX(ROUND(rand()*POW(2,16))), 4, '0'), '-',
+    LPAD(HEX(ROUND(rand()*POW(2,16))), 4, '0'), '-',
+    LPAD(HEX(ROUND(rand()*POW(2,16))), 4, '0'), '-',
+    LPAD(HEX(ROUND(rand()*POW(2,48))), 12, '0')
+)) AFTER `id`;
 	
-UPDATE rooms SET is_hidden = 1 WHERE model IN ('rooftop_2','old_skool1','malja_bar_b','bar_b','gate_park_2','park_b','pool_b','hallway0','hallway1','hallway3','hallway5','hallway4','hallway8','hallway7','hallway6','hallway10','hallway11','hallA','hallB','hallC','hallD','beauty_salon1');
-
-DROP TABLE IF EXISTS `public_roomwalkways`;
-CREATE TABLE IF NOT EXISTS `public_roomwalkways` (
-  `room_id` int(11) DEFAULT NULL,
-  `to_id` int(1) DEFAULT NULL,
-  `coords_map` varchar(255) DEFAULT NULL,
-  `door_position` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-INSERT INTO `public_roomwalkways` (`room_id`, `to_id`, `coords_map`, `door_position`) VALUES
-	(45, 69, '20,23 20,24 20,25 21,23 21,24 21,25', '3,23,0,2'),
-	(69, 45, '0,22 1,23', '19,24,0,6'),
-	(34, 35, '28,4', NULL),
-	(35, 34, '11,2', '28,5,0,4'),
-	(32, 33, '23,0 22,0 20,0 19,0 18,0 17,0 16,0 15,0 14,0 11,0 10,0 9,0', NULL),
-	(33, 32, '16,24 15,24 17,24 18,24 18,25 17,25 16,25 15,25 18,26 17,26 16,26', '16,2,2,4'),
-	(13, 14, '9,4 10,4 9,3', NULL),
-	(14, 13, '3,11 4,11 5,11', '10,5,4,4'),
-	(19, 20, '16,18', NULL),
-	(20, 19, '0,7', '15,18,0,6'),
-	(21, 22, '14,0 15,0', NULL),
-	(22, 21, '5,25 ', '15,1,4,4'),
-	(23, 24, '9,32 10,32 11,32 9,33 10,33', NULL),
-	(24, 23, '1,10 1,11 1,12', '10,30,5,0'),
-	(36, 37, '19,3 20,4 21,5 22,6 23,7 24,8 25,9 26,10 27,11 28,12', NULL),
-	(36, 37, '30,14 31,15 32,16 33,17 34,18 35,19 36,20 37,21 38,22 39,23', '18,30,1,1'),
-	(37, 36, '13,26 14,27 15,28 16,29 17,30 18,31 19,32 20,33 21,34', '34,19,1,5'),
-	(47, 48, '0,6 0,7 0,8 0,9', '29,3,1,6'),
-	(47, 50, '6,23 7,23 8,23 9,23', '7,2,1,4'),
-	(47, 52, '27,6 27,7 27,8 27,9', '2,3,0,2'),
-	(48, 47, '31,5 31,4 31,3 31,2', '2,7,1,2'),
-	(48, 49, '14,19 15,19 16,19 17,19', '15,2,0,4'),
-	(49, 50, '31,9 31,8 31,7 31,6', '2,8,1,2'),
-	(49, 48, '17,0 16,0 15,0 14,0', '16,17,1,0'),
-	(50, 47, '9,0 8,0 7,0 6,0', '8,21,1,0'),
-	(50, 49, '0,9 0,8 0,7 0,6', '29,7,0,6'),
-	(50, 51, '31,6 31,7 31,8 31,9', '2,15,0,2'),
-	(51, 50, '0,17 0,16 0,15 0,14', '29,7,0,6'),
-	(51, 52, '22,0 23,0 24,0 25,0', '24,17,1,0'),
-	(52, 47, '0,2 0,3 0,4 0,5', '25,7,0,6'),
-	(52, 51, '22,19 23,19 24,19 25,19', '24,2,1,4'),
-	(53, 54, '14,0 15,0 16,0 17,0', '19,21,0,0'),
-	(53, 57, '14,31 15,31 16,31 17,31', '3,6,1,4'),
-	(53, 55, '0,14 0,15 0,16 0,17', '17,23,0,6'),
-	(53, 58, '31,17 31,16 31,15 31,14', '2,3,1,2'),
-	(54, 55, '0,14 0,15 0,16 0,17', '13,8,1,6'),
-	(54, 53, '18,23 19,23 20,23 21,23', '16,2,0,4'),
-	(55, 54, '15,6 15,7 15,8 15,9', '2,15,1,2'),
-	(55, 56, '0,25 0,24 0,23 0,22', '21,12,0,6'),
-	(55, 53, '19,22 19,23 19,24 19,25', '2,15,0,2'),
-	(56, 55, '23,13 23,12 23,11 23,10', '2,23,0,2'),
-	(57, 53, '2,4 3,4 4,4 5,4', '15,29,0,0'),
-	(57, 58, '17,0 17,1 17,2 17,3', '10,19,0,2'),
-	(58, 57, '8,18 8,19 8,20 8,21', '15,1,0,6'),
-	(58, 53, '0,5 0,4 0,3 0,2', '29,15,0,6'),
-	(61, 62, '2,0 3,0', '1,1,1,4'),
-	(61, 63, '8,0 9,0', '2,1,1,4'),
-	(61, 64, '14,0 15,0', '1,1,1,4'),
-	(61, 65, '0,2 0,3', '1,1,1,4'),
-	(62, 61, '0,0 1,0', '3,1,1,4'),
-	(63, 61, '2,0 1,0', '9,1,1,4'),
-	(64, 61, '0,0 1,0', '15,1,1,4'),
-	(65, 61, '0,0 1,0', '1,3,1,2'),
-	(37, 36, '0,13 1,14 2,15 3,16 4,17 5,18 6,19 7,20 8,21 9,22 10,23 11,24 12,25', '23,7,7,5');
+-- Start merge teleporter table
+ALTER TABLE `items_teleporter_links`
+	ADD COLUMN `database_item_id` VARCHAR(36) NOT NULL AFTER `linked_id`,
+	ADD COLUMN `database_linked_id` VARCHAR(36) NOT NULL AFTER `databse_item_id`;
 	
-UPDATE `rooms_models` SET `heightmap`='xxxxxxxx77xxxxxxxxxxxxxxxx|xxxxxxxx77xxxxxxxxxxxxxxxx|xxxxxx77777x77xxxxxxxxxxxx|xxx77777777777xxx44xxxxxxx|77777777777777xx444444444x|777777777777777xx44444444x|xxx777777777777xx44444444x|xxxx7777777777xxx44444444x|77777777777777777x4448444x|7777777777777xxxx44448444x|777777777777x444444448444x|7777777777774444444448444x|7777777777774444444448444x|777777777777x444444448444x|7777777777777x44444448444x|xxx777777777777x444448444x|xxx7777777777777x44448444x|xxx7777777777777x44448444x|xxx777777777777x444448444x|xxx77777777777x4444444444x|xxxx777777777x44444444444x|xxxxxxxxxxxxxxxxxxxxxxxxxx' WHERE  `model_id` = 'md_a';
+UPDATE items_teleporter_links 
+	INNER JOIN items
+	ON items.id = items_teleporter_links.item_id
+SET items_teleporter_links.database_item_id = items.database_id;
+
+UPDATE items_teleporter_links 
+	INNER JOIN items
+	ON items.id = items_teleporter_links.linked_id
+SET items_teleporter_links.database_linked_id = items.database_id;
+
+ALTER TABLE `items_teleporter_links`
+	CHANGE COLUMN `database_item_id` `item_id` VARCHAR(36) NOT NULL COLLATE 'utf8mb4_general_ci' FIRST,
+	CHANGE COLUMN `database_linked_id` `linked_id` VARCHAR(36) NOT NULL COLLATE 'utf8mb4_general_ci' AFTER `item_id`,
+	DROP COLUMN `item_id`,
+	DROP COLUMN `linked_id`;
+	
+-- End merge teleporter link table
+
+-- Start merge moodlight presets table
+ALTER TABLE `items_moodlight_presets`
+	ADD COLUMN `database_item_id` VARCHAR(36) NOT NULL AFTER `linked_id`;
+	
+UPDATE items_moodlight_presets 
+	INNER JOIN items
+	ON items.id = items_moodlight_presets.item_id
+SET items_moodlight_presets.database_item_id = items.database_id;
+
+ALTER TABLE `items_moodlight_presets`
+	CHANGE COLUMN `database_item_id` `item_id` VARCHAR(36) NOT NULL COLLATE 'utf8mb4_general_ci' FIRST, 
+	DROP COLUMN `item_id`;
+	
+-- End merge moodlight presets table
+
+ALTER TABLE `items`
+	CHANGE COLUMN `database_id` `id` VARCHAR(50) NOT NULL DEFAULT lcase(concat(lpad(hex(round(rand() * pow(2,32),0)),8,'0'),'-',lpad(hex(round(rand() * pow(2,16),0)),4,'0'),'-',lpad(hex(round(rand() * pow(2,16),0)),4,'0'),'-',lpad(hex(round(rand() * pow(2,16),0)),4,'0'),'-',lpad(hex(round(rand() * pow(2,48),0)),12,'0'))) COLLATE 'utf8mb4_general_ci' FIRST,
+	DROP COLUMN `id`,
+	DROP PRIMARY KEY,
+	DROP INDEX `id`,
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE INDEX `id` (`id`);
